@@ -1,0 +1,63 @@
+@startuml
+
+enum Department {
+    SALES
+    HUMAN_RESOURCES
+    MANAGEMENT
+    OPERATIONS
+}
+
+class Entity {
+    +id: String
+}
+
+class Company {
+    +nit: String
+    +name: String
+    +address: String
+}
+
+class Person {
+    +fullName: String
+    +gender: String
+    +email: String
+}
+
+class EmployeePosition {
+    +name: String
+    +hierarchyLevel: Int
+}
+
+class Employee {
+    +salary: Double
+    +joiningYear: Int
+}
+
+class Client {
+    +address: String
+    +phone: String
+}
+
+interface CrudReposiory <T : Entity> {
+    readAll(): T[]
+    read(id: String): T
+    save(entity: T)
+    delete(id: String)
+}
+
+Company --|> Entity
+Person --|> Entity
+Employee --|> Person
+Client --|> Person
+
+Company *-- "1..*" Employee
+Company o-- "0..*" Client
+
+Employee --> Department
+Employee o-- "0..*" Employee
+Employee *-- "1" EmployeePosition
+
+Client ..|> CrudReposiory
+Employee ..|> CrudReposiory
+
+@enduml
