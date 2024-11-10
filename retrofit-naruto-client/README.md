@@ -12,8 +12,15 @@ This is a simple type-safe HTTP client for a Naruto API called [Dattebayo](https
 You can run the project using the following command from the root directory:
 
 ```bash
-gradle run
+./gradlew run
 ```
+
+> [!NOTE]
+> Alternatively, you can only dowload the executable JAR file from the [releases](https://github.com/N3VERS4YDIE/mobile-dev-eam/releases/tag/retrofit-naruto-client) page and run it using the following command:
+>
+> ```bash
+> java -jar retrofit-naruto-client.jar
+> ```
 
 ## Output Example
 
