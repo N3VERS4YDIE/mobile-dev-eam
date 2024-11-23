@@ -24,27 +24,32 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.n3vers4ydie.unieventos.Global
 import com.n3vers4ydie.unieventos.R
+import com.n3vers4ydie.unieventos.controllers.UserController
 import com.n3vers4ydie.unieventos.controllers.eventController
-import com.n3vers4ydie.unieventos.controllers.loggedUser
+import com.n3vers4ydie.unieventos.controllers.userController
 import com.n3vers4ydie.unieventos.models.EventModel
-import com.n3vers4ydie.unieventos.utils.formatBigDecimal
 import com.n3vers4ydie.unieventos.utils.loadImage
-import java.math.BigDecimal
+import com.n3vers4ydie.unieventos.utils.numberFormatter
 
 @Composable
-fun EventsScreen(onEventClick: (eventId: Int) -> Unit, onAddEventClick: () -> Unit) {
-    val events = eventController.getAll()
-    Box(modifier = Modifier.fillMaxSize()) {
+fun EventsScreen(onEventClick: (eventId: String) -> Unit, onAddEventClick: () -> Unit) {
+    var events = remember { mutableStateListOf<EventModel>() }
+
+    LaunchedEffect(Unit) {
+        events.addAll(eventController.getAll())
+    }
+
+    Box(modifier = Modifier.padding(Global.innerPadding)) {
         EventGrid(events = events, onEventClick = { onEventClick(it.id) })
 
-        // Show the 'Add' button only if loggedUser is admin
-        if (loggedUser?.isAdmin == true) {
+        if (UserController.loggedUser?.admin == true) {
             FloatingActionButton(
                 onClick = { onAddEventClick() },
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
-                    .padding(16.dp),
+                    .padding(Global.paddingValue),
                 containerColor = MaterialTheme.colorScheme.primary
             ) {
                 Icon(
@@ -65,7 +70,6 @@ fun SearchBar(searchQuery: String, onSearchChange: (String) -> Unit) {
         label = { Text(text = "Search Events") },
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
     )
 }
 
@@ -76,9 +80,9 @@ fun EventGrid(events: List<EventModel>, onEventClick: (EventModel) -> Unit) {
     LazyVerticalGrid(
         columns = GridCells.Adaptive(150.dp),
         state = gridState,
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        contentPadding = PaddingValues(Global.paddingValue),
+        verticalArrangement = Arrangement.spacedBy(Global.paddingValue),
+        horizontalArrangement = Arrangement.spacedBy(Global.paddingValue),
         modifier = Modifier.fillMaxSize()
     ) {
         items(events.size) { index ->
@@ -95,7 +99,9 @@ fun EventCard(event: EventModel, onClick: () -> Unit) {
             .clickable { onClick() },
     ) {
         Column {
-            Box(modifier = Modifier.fillMaxWidth().padding(4.dp)) {
+            Box(modifier = Modifier
+                .fillMaxWidth()
+                .padding(4.dp)) {
                 Column()
                 {
                     Text(
@@ -122,10 +128,14 @@ fun EventCard(event: EventModel, onClick: () -> Unit) {
                 error = painterResource(R.drawable.ic_launcher_foreground)
             )
 
-            Box(modifier = Modifier.fillMaxWidth().padding(4.dp)) {
+            Box(modifier = Modifier
+                .fillMaxWidth()
+                .padding(4.dp)) {
                 val minPrice = event.localities.minOf { it.price }
                 val maxPrice = event.localities.maxOf { it.price }
-                var priceRange = (if (minPrice == maxPrice || maxPrice == BigDecimal.ZERO) formatBigDecimal(minPrice) else "${formatBigDecimal(minPrice)} - ${formatBigDecimal(maxPrice)}") + " COP"
+                val formattedMinPrice = numberFormatter.format(minPrice)
+                val formattedMaxPrice = numberFormatter.format(maxPrice)
+                var priceRange = (if (minPrice == maxPrice || maxPrice == 0.0) formattedMinPrice else "$formattedMinPrice - $formattedMaxPrice") + " COP"
 
                 Text(
                     text = priceRange,

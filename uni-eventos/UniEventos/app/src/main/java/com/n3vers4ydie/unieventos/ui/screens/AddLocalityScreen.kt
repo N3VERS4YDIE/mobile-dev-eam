@@ -20,9 +20,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.n3vers4ydie.unieventos.models.EventModel
 import com.n3vers4ydie.unieventos.models.LocalityModel
+import kotlin.random.Random
 
 @Composable
-fun AddLocalityScreen(event: EventModel, onSaveLocality: (LocalityModel) -> Unit) {
+fun AddLocalityScreen(onSaveLocality: (LocalityModel) -> Unit) {
     var localityName by remember { mutableStateOf("") }
     var localityPrice by remember { mutableStateOf("") }
 
@@ -52,7 +53,8 @@ fun AddLocalityScreen(event: EventModel, onSaveLocality: (LocalityModel) -> Unit
             onClick = {
                 val newLocality = LocalityModel(
                     name = localityName,
-                    price = localityPrice.toBigDecimal()
+                    price = localityPrice.toDouble(),
+                    capacity = Random.nextInt(50, 500)
                 )
                 onSaveLocality(newLocality)
             },

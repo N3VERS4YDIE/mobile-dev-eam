@@ -1,34 +1,30 @@
 package com.n3vers4ydie.unieventos.controllers
 
 import com.n3vers4ydie.unieventos.models.EventModel
-import com.n3vers4ydie.unieventos.models.LocalityModel
-import java.util.Date
-import kotlin.random.Random
+import com.n3vers4ydie.unieventos.repositories.FirestoreRepository
 
-val eventController = EventController()
+val eventController = EventLocalController()
 
-class EventController : BaseController<EventModel> {
-    constructor() {
-        for (i in 1..10) {
-            val localities = mutableListOf(
-                LocalityModel("VIP", Random.nextInt(100_000, 1_000_000).toBigDecimal()),
-                LocalityModel("Normal", Random.nextInt(50_000, 500_000).toBigDecimal())
-            )
-
-            for (locality in localities) {
-                localityController.save(locality)
-            }
-
-            val event = EventModel(
-                name = "Evento $i",
-                date = Date(),
-                location = "Ubicación $i",
-                description = "Descripción $i",
-                posterUrl = "https://picsum.photos/300/200/$i",
-                localities = localities
-            )
-
-            save(event)
-        }
-    }
+class EventLocalController : FirestoreRepository<EventModel>("events", EventModel::class) {
+//    init {
+//        for (i in 1..10) {
+//            val localities = mutableListOf(
+//                LocalityModel(name="Normal", price=Random.nextDouble(100_000.0, 500_000.0), capacity = Random.nextInt(50, 500)),
+//                LocalityModel(name="VIP", price=Random.nextDouble(500_000.0, 1_000_000.0), capacity = Random.nextInt(50, 500))
+//            )
+//
+//            val event = EventModel(
+//                name = "Evento $i",
+//                type = "Tipo $i",
+//                city = "Ciudad $i",
+//                location = "Ubicación $i",
+//                description = "Descripción $i",
+//                posterUrl = "https://picsum.photos/300/200/$i",
+//                date = Date(),
+//                localities = localities
+//            )
+//
+//            save(event)
+//        }
+//    }
 }

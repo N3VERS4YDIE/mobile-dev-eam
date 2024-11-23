@@ -14,7 +14,7 @@ sealed class ScreenRoute {
     data object Events : ScreenRoute()
 
     @Serializable
-    data class Event(val eventId: Int) : ScreenRoute()
+    data class Event(val eventId: String) : ScreenRoute()
 
     @Serializable
     data object Cart : ScreenRoute()
@@ -23,8 +23,11 @@ sealed class ScreenRoute {
     data object History : ScreenRoute()
 
     @Serializable
-    data class AddLocality(val eventId: Int) : ScreenRoute()
+    data object User: ScreenRoute()
 
     @Serializable
-    data class ManageEvent(val eventId: Int) : ScreenRoute()
+    data class EditEvent(val eventId: String) : ScreenRoute()
+
+    @Serializable
+    data class Message(val text: String) : ScreenRoute()
 }

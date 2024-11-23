@@ -9,52 +9,55 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.n3vers4ydie.unieventos.ui.theme.UniEventosTheme
-
-@Preview
-@Composable
-fun LoginScreenPreview() {
-    UniEventosTheme {
-        Surface {
-            LoginScreen(onLoginClick = { _, _ -> }, onForgotPasswordClick = {}, onRegisterClick = {})
-        }
-    }
-}
+import com.n3vers4ydie.unieventos.Global
+import com.n3vers4ydie.unieventos.controllers.userController
+import com.n3vers4ydie.unieventos.models.UserModel
 
 @Composable
 fun LoginScreen(
-    onLoginClick: (email: String, password: String) -> Unit,
+    onLoginClick: (users: List<UserModel>, email: String, password: String) -> Unit,
     onForgotPasswordClick: () -> Unit,
     onRegisterClick: () -> Unit
 ) {
+    var users = remember { mutableStateListOf<UserModel>() }
+
+
+    LaunchedEffect(Unit) {
+        users.addAll(userController.getAll())
+    }
+
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(Global.paddingValue),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        OutlinedTextField(value = email, onValueChange = {
-            email = it
-        }, label = { Text("Correo Electrónico") }, modifier = Modifier.fillMaxWidth()
+        OutlinedTextField(
+            value = email,
+            onValueChange = { email = it },
+            label = { Text("Correo Electrónico") },
+            modifier = Modifier.fillMaxWidth()
         )
-        OutlinedTextField(value = password,
+        OutlinedTextField(
+            value = password,
             onValueChange = { password = it },
             label = { Text("Contraseña") },
             modifier = Modifier.fillMaxWidth(),
@@ -62,7 +65,7 @@ fun LoginScreen(
         )
 
         Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = { onLoginClick(email, password) }, modifier = Modifier.fillMaxWidth()) {
+        Button(onClick = { onLoginClick(users, email, password) }, modifier = Modifier.fillMaxWidth()) {
             Text("Iniciar Sesión")
         }
 

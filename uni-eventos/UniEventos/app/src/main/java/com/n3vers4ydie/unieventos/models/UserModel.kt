@@ -1,11 +1,12 @@
 package com.n3vers4ydie.unieventos.models
 
-class UserModel (
-    val idNumber: String,
-    val name: String,
-    val email: String,
-    val password: String,
-    val phone: String,
-    val address: String,
-    val isAdmin: Boolean
-) : BaseModel()
+class UserModel(
+    override var id: String = "",
+    var dni: String = "",
+    var name: String = "",
+    var email: String = "",
+    var password: String = "",
+    var phone: String = "",
+    var address: String = "",
+    var admin: Boolean = false
+) : BaseModel(id)

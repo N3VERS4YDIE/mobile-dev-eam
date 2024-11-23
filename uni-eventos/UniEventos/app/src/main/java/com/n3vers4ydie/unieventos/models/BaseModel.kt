@@ -1,5 +1,3 @@
 package com.n3vers4ydie.unieventos.models
 
-open class BaseModel {
-    var id: Int = 0
-}
+open class BaseModel(open var id: String)

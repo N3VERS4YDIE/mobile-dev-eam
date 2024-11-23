@@ -1,13 +1,11 @@
 package com.n3vers4ydie.unieventos.models
 
-import java.math.BigDecimal
-
-data class CartItemModel (
-    val event: EventModel,
-    val locality: LocalityModel,
-    val quantity: Int
-): BaseModel() {
-    fun getTotal(): BigDecimal {
-        return locality.price.multiply(quantity.toBigDecimal())
-    }
+data class CartItemModel(
+    override var id: String = "",
+    var userId: String = "",
+    var event: EventModel = EventModel(),
+    var locality: LocalityModel = LocalityModel(),
+    var quantity: Int = 0,
+) : BaseModel(id) {
+    fun getTotal() = locality.price * quantity
 }
